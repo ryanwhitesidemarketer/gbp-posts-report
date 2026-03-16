@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWM Google Business Profile Posts Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #e94560;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-bottom: 2px solid #e94560;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .business-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .business-header {
+            border-bottom: 3px solid #e94560;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .business-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
+        }
+
+        .business-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.95rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .post-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #e94560;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 1.2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-standard {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-offer {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-event {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-alert {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-live {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-rejected {
+            background: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .post-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            color: #444;
+            flex-grow: 1;
+        }
+
+        .post-text.collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: #e94560;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0;
+            margin-top: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .post-date {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.8rem;
+        }
+
+        .post-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background: #d63553;
+        }
+
+        .google-link {
+            display: inline-block;
+            background: #f5f5f5;
+            color: #1a1a2e;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #ddd;
+            transition: all 0.2s ease;
+        }
+
+        .google-link:hover {
+            background: #efefef;
+            border-color: #e94560;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: #ccc;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+
+        .no-posts-message {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TWM Client Posts Report</h1>
+        <p class="subtitle">Google Business Profile Posts - Adzviser Connected Clients</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number">18</div>
+            <div class="stat-label">Total Businesses</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">69</div>
+            <div class="stat-label">Posts Displayed</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Active Last 30 Days</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">4 Seasons (Four Seasons Flowers)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>97,556</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMibNDcfsHp-LZxErwhJlN_JVyLKei1qVfTJdM4=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-09953638">
+                            Our Thanksgiving centerpieces are designed to make your holiday table unforgettable...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.4seasonsflowers.com/product-category/thanksgiving/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=10672158316279218662&use=posts&lpsid=CIHM0ogKELC3taGUoMP3LA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipN1oWLz9yhrzhSGZnwAmouGBsV4YQZ4qA8IHV8v=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-27216372">
+                            At 4 Seasons Flowers, we believe that flowers are the perfect way to elevate these celebrations...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 21, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.4seasonsflowers.com/celebrating-milestones-with-flowers-choosing-the-perfect-seasonal-bouquet/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=10672158316279218662&use=posts&lpsid=CIHM0ogKEO3Cot-E7pHHYQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipM2p7zIUI6tSUqd12hY0grA1COhivey_5DRjmrx=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-86638516">
+                            🌸 Celebrate Mom with Beautiful Blooms! 🌸
+Mother's Day is almost here!...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">May 06, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.4seasonsflowers.com/product-category/mothers-day/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=10672158316279218662&use=posts&lpsid=CIHM0ogKEM_IlKqH-5CL5AE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipObU_kd3ufvgQToxh7NofCJHwRWUuLBjMaEh0Y1=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-14879651">
+                            White flowers, with their pristine beauty and serene aura...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 13, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.4seasonsflowers.com/the-timeless-elegance-of-white-flowers-perfect-for-any-occasion/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=10672158316279218662&use=posts&lpsid=CIHM0ogKEICAgMDQ_Y65BA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Accel Conceptions (Accel Conceptions, Inc.)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>3,734</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>46 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <p class="no-posts-message">No text content</p>
+                        <div class="post-date">Jan 28, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKENbIxreQpNKw3gE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <p class="no-posts-message">No text content</p>
+                        <div class="post-date">Jan 28, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEJDh-OL2mfKiKg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOb5DO6DZr7KdO2piv9iM1aKeFo1rehpqq2jG3p=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-71366313">
+                            Surrogacy Law: Navigating Legal Complexities...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.accelconceptions.com/surrogacy-law-navigating-legal-complexities/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEN-hxtexytG66QE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMQBVXrFtzCdyC53JN4tIkP6PFLto12zJlo8dQF=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-30554045">
+                            Find out what surrogacy involves, how it works and what you can expect throughout the process.
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 07, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.accelconceptions.com/surrogacy-a-complete-guide-to-understanding-the-process/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEP2f6P-A_Z3bdQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Aebersold Florist</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>47,356</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>-1 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNC8SRupijM9uj1DCZ31YQDeEhG2XzARoTQb7xh=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-87851075">
+                            When you shop with a local florist like us, you're helping shape your community...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 16, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEIGKrdu2-byZfg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipN7napmHAeabx7Etp5J35LBvGx101PFCjaBP0S9=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-98569757">
+                            STOP THE SCROLL! 🧡 Your simple like or follow is the heartbeat of our local floral business...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 11, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEPGD4vDmoOLUWw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPEy5oE6XLN_pq6Fh9A38j7QMsRqByTgvG7y6a3=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-76453089">
+                            REFRESH YOUR SPACE! There's nothing like professional floral design...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 09, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEN30oPbXyNO8XA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMpy7gLVcdc-_yWuqURDmjYslnY_1eovH2kCtwv=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-17346454">
+                            CELEBRATION VIBES! Flowers are the ultimate way to level up any birthday, anniversary, or gathering...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 04, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEMf-qMaGwPbfyQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Anaheim Hills (Anaheim Hills Florist)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>100,543</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>2 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNSBgCCanTuJAKY1evDlSCgfPNAEsb7gviXrx2L=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-90132699">
+                            Bud vases are having a moment… and we're not mad about it.
+A few stems. A few vases. Instant charm.
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 13, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEOuU65b8_NHQQA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNyC09yUMozh_INDldGe1I1IQcfRMmYQrI7bAqF=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-00081000">
+                            Here's proof that a simple vase of red roses can change the entire vibe of your desk...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 06, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEJOMkOjv5L7vXQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPepBsO8W0IFVOZixiE1wpn0WVAq8jwsrEm3eyb=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-61299345">
+                            A closer look at why we love what we do 🌺
+The ruffles, the richness of color...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Feb 27, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEPTb1t6p-fz7igE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipO4FHnj0JNAhSGAzwhPughUpnokfPumxuDad0P5=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-70490459">
+                            Soft pinks, warm orange roses, and fresh green accents, all wrapped up in our cute pink tote bag...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Feb 13, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEN7P2cXJormYIw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Bedford Village (Bedford Village Flower Shoppe)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>51,751</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMnMQTnW6jjGUEkF2xdKLUPvZ0yLHScDN7L_BjG=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-73443733">
+                            Bring warmth and beauty to your Thanksgiving celebration with our handcrafted holiday flower arrangements...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://bedfordvillageflowershoppe.com/product-category/floral-arrangements/thanksgiving-arrangements/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEOmx1YWAuMaTJA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMN_JHWUonTIyvfzOdXpVI9XE6X1l6QgBA6A06N=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-81923125">
+                            At Bedford Village Flower Shoppe, we understand the delicate nature of this gesture...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://bedfordvillageflowershoppe.com/2025/09/sympathy-flowers-expressing-condolences-with-elegance-2/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKENO62_K6oKL11gE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMfHloHq8DWaEEJiGf8HGx-B1ULlTKF5R6hbC9T=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-60613420">
+                            There's nothing quite like the joy of bringing a fresh, vibrant floral arrangement into your home...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 21, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://bedfordvillageflowershoppe.com/2025/08/the-art-of-flower-care-tips-and-tricks/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEMyIrPvYj5bElgE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOSsefSlC48PdeM7v--ohX-nXCm9GsjCmqu5r2h=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-86638516">
+                            🌸 Celebrate Mom with Beautiful Blooms! 🌸
+Mother's Day is almost here!...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">May 06, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://bedfordvillageflowershoppe.com/product-category/floral-arrangements/mothers-day/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEIilrNWcr6edLQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Blooms in Bunches</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>82,027</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNGL3PYcTneWZ0GzG5b3oIpyqOinEWQJPIvjXry=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-41854212">
+                            Say "thank you" this season with a stunning Thanksgiving bouquet...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.bloomsinbunches.com/fall-flowers/cat1080004" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=9318534368708713829&use=posts&lpsid=CIHM0ogKEJuCk-z1tpGx9QE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNJ8K8tl_iV6GM1Xb6adOkStY7TnHypxei9QC8r=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-00223735">
+                            At Blooms in Bunches in Merrick, NY, we approach these sensitive occasions with the utmost compassion...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.bloomsinbunches.com/blog/09-08-2025/Sympathy-Flowers-A-Guide-to-Expressing-Your-Condolences-with-Elegance" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=9318534368708713829&use=posts&lpsid=CIHM0ogKEKn6jL6Sh-fyFg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMyYSUWZEfx7yDcPbaJTsweQq-S1L7r-3Y_h3H7=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-92788366">
+                            At Blooms in Bunches in Merrick, NY, we believe that expressing love should be as beautiful...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 21, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.bloomsinbunches.com/blog/08-08-2025/Romantic-Flowers-Express-Your-Love-with-Roses-and-Other-Timeless-Blooms" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=9318534368708713829&use=posts&lpsid=CIHM0ogKEKKQ4pPLkMHqXA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipO62rbqHhFD7jzn7D_puS0t00eWpbvSKwyX4b2o=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-86638516">
+                            🌸 Celebrate Mom with Beautiful Blooms! 🌸
+Mother's Day is almost here!...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">May 06, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.bloomsinbunches.com/mothers-day/cat1110001" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=9318534368708713829&use=posts&lpsid=CIHM0ogKELyQmZOA_Nyy6AE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Dave Fox (Dave Fox Design Build Remodelers)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>21,785</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>43 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOwOKK3hPkHa9LAtUMQTc_1C0Xuie1ZDrvF9Wkl=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-08471053">
+                            https://www.davefox.com/resource-center/creating-a-cohesive-look-across-multiple-rooms-in-a-remodel
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEIXr9v-H4_zTpwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNlwR_SdEC5yFEQueocUo5uA6zDY0t-8txO0e6t=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-32017942">
+                            https://www.davefox.com/resource-center/standing-desks-and-ergonomics-in-home-office-remodels
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKENDsss-J_bCljgE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMOhifQeEhSP8SxouMOeWgQgZxs9T_EzYh8KjsE=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-39031633">
+                            Moisture-Proofing Tips Before Your Basement Remodel...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.davefox.com/resource-center/moisture-proofing-tips-before-your-basement-remodel" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEJmwp87xs_ncxwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOXs9T5o6szIWEEdJPEw3XGPoPMs6IE4PnNe7V9=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-76669535">
+                            At Dave Fox, we specialize in transforming homes throughout Central Ohio...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 07, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.davefox.com/resource-center/home-office-remodel-ideas-for-maximum-productivity-and-comfort" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEMGZ89GK8YaSsQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Dotties Flowers (Dottie's Flowers & Plants)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>244,964</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>43 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipO_ehw0rGNf02yC4IJ85LIoQExAKQjVg3lyElJ9=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-34133743">
+                            https://www.dottiesflowers.com/about/our-blog/flowers-for-difficult-times-comforting-blooms-for-healing-and-hope/
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.dottiesflowers.com/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5353989179403553495&use=posts&lpsid=CIHM0ogKEO3cncqx6MDsUA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOTLZF10jr_hphPgK8TmrBdlrSRGy_Cs5IdPW-p=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-95083321">
+                            At Dottie's Flowers, we offer a wide selection of Valentine's Day flowers...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.dottiesflowers.com/flowers/valentines-day/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5353989179403553495&use=posts&lpsid=CIHM0ogKEKLo_4KCyaWaGg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNT-FAbZ0pOJQy6yKdQCCIi0r8EgNN_ToSMeLB7=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-06161230">
+                            Need a centerpiece or a holiday bouquet? We've got you covered!...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.dottiesflowers.com/flowers/fall-splendor/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=5353989179403553495&use=posts&lpsid=CIHM0ogKENrG5LG2ncPPHA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMgTNcnjU1jQ85HOyWm1Px0jW93YuIeNAHeSnJ0=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-44067821">
+                            At Dottie's Flowers, we know that the true magic of a bouquet isn't just in the beauty...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.dottiesflowers.com/about/our-blog/the-art-of-balancing-colors-harmonizing-hues-in-floral-designs/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5353989179403553495&use=posts&lpsid=CIHM0ogKEJz414Tx2In3_AE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Hody's (Hodys Florist)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>31,738</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>8 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        No image available
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-37130216">
+                            We Deliver to Brentwood and Franklin every Saturday too!
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 07, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEKi-w9i0ld_bDw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        No image available
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-65813428">
+                            Until Monday 2/2/26 only our Nashville store will be open for walk-in traffic...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 30, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEIOY1uv58vinxQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPEv79Al8uI6iuC1FAlfhYG8si8pANS0HdUZK-M=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-69117514">
+                            A beautiful floral tribute for a lovely individual who loved the game of golf...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jul 20, 2021</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEICAgICawPObjwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMTvhvtSea0hPzuJIxoE3Ltd1q-pOxbcfn9VH03=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-offer">OFFER</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-64942477">
+                            Only $89.85- normally $109.95 for this once a year Independence Day rose!
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jun 28, 2021</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEICAgIDqhOjUIw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Longmont Florist</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>83,576</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMPkRMSug2qBM-Cf_LWzWGaZJJcWxFyleozoE-R=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-77098239">
+                            Whether you're hosting Thanksgiving or visiting loved ones, flowers make the perfect touch...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.longmontflorist.com/fall-flowers/cat1080004" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=16518277287620308786&use=posts&lpsid=CIHM0ogKEI-bgbLVyc3f3wE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOOWA3WfayQDa0NDtzbJkOp0zN6xH2B59p1liEq=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-64761831">
+                            At Longmont Florist, we're not just about crafting beautiful arrangements...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.longmontflorist.com/blog/09-08-2025/The-Wellness-Benefits-of-Flowers-Healing-with-Blooms" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=16518277287620308786&use=posts&lpsid=CIHM0ogKENK-y5Srz-G6ogE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPaEVItfErZqvx40IQI_jD78mDJKIlYBvPxI8WX=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-06721336">
+                            At Longmont Florist, we understand the profound importance of this floral centerpiece...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 21, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.longmontflorist.com/blog/08-08-2025/Bridal-Bouquet-Tips-Choosing-the-Perfect-Flowers-for-Your-Big-Day" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=16518277287620308786&use=posts&lpsid=CIHM0ogKELyS8IWx39-TOA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNpd5QQr-KG9KllLC_rL6N72kdYZmof5X_Nowrb=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-08449967">
+                            Longmont Florist has flowers for Mother's Day that will suit any style...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">May 06, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.longmontflorist.com/mothers-day/cat1110001" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=16518277287620308786&use=posts&lpsid=CIHM0ogKEKikpLrgw4O1zgE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Monroe Florist (Monroe Florist & Flower Delivery)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>51,072</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>43 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipN48yBO39BWs2lLA4YvIb8MaBh_6kmtwYcepIqm=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-43383987">
+                            https://www.monroeflorist.biz/blog/12-09-2025/Elevating-the-Everyday-Floral-Arrangements-that-Transform-Your-Mood
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.monroeflorist.biz/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEKa0jqr72urwCg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOVvYYmX3458GzdTIFoO0pDgCYfdHW1LDJolAlL=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-06141663">
+                            We specialize in custom bouquets, elegant gift baskets, and same-day floral delivery...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.monroeflorist.biz/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEJi44YLku7yAWg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPqcyFxU9XYT2m2ATZ9KC7Lm-_4-oSPb4dxDEJ1=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-05591718">
+                            🍁 Bring the beauty of autumn indoors! 🍂...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 10, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.monroeflorist.biz/fall-flowers/cat2870011" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEO3n27bdzaeAAQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPHQEqKK4fvDIEKgr7B47rZNQqhcVHFRq9Ox0Sn=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-60054426">
+                            At Monroe Florist, we believe that one of the simplest and most elegant ways to honor yourself is with the gift of flowers...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.monroeflorist.biz/blog/09-03-2025/Flowers-for-SelfLove-Treat-Yourself-to-Something-Beautiful" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEMPOmqHftZm7YQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Nancy's Floral (Nancy's Floral, Inc.)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>65,843</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPl-LH4db7BBdvDUsU7mmvtP4HHCZIpVwmf50Ps=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-86303686">
+                            Fall Colors for Your Holiday Table
+Celebrate Thanksgiving with seasonal blooms...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.nancysfloral.com/shop-by-occasion/thanksgiving/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEPay_Y6Rz8fl-AE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPKDD6Fi5PCr93qmSnJ7fcjrayC8IjSR1IdPENc=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-event">EVENT</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-83275001">
+                            Celebrate the Season with Flowers, Flavor & Festive Cheer!
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 29, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.nancysfloral.com/about-nancys/holiday-open-house/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEJbhrYjI1fH-gAE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipP3fhLKSnseUfXJd_I_9MuWmI_kgOsT4GAhWREK=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-10647817">
+                            As the days shorten and a crispness enters the air, autumn descends upon us...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.nancysfloral.com/blog/fall-flower-arrangements-warm-colors-for-the-coziest-season/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEOPsmNHcgo2idA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOFGzxZdTDpAP2cX6y124cv3qXY4DOR0XnwA_cU=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-80296273">
+                            At Nancy's Floral, we understand the importance of choosing an arrangement...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 21, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.nancysfloral.com/blog/get-well-soon-flowers-uplifting-arrangements-for-a-speedy-recovery/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEKTX-sqU9cKugwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Pflorist (Penny's by Plaza Flowers)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>127,086</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>419 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPM0EvrVaO3CPomLKmCk3F8FOZxdqRv7lodr_bB=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-79405901">
+                            Celebrate love and friendship this Valentine's Day at Penny's by Plaza Flowers!...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 20, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEICAgID_sKqMMw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPBn1BhB2YoMbOFFIg_4gUp_GEekDCETPghLVft=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-99938851">
+                            Your Wedding Perfected with Penny's By Plaza...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Aug 15, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEICAgIC7zq2jwwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPj243WKj88qUc8COrsEO7TionZ7Wt7czeihRkI=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-88622090">
+                            Penny's By Plaza Flowers
+In a world where connections matter more than ever...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jul 08, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://pflorist.com/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEICAgICrqdmBiQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipObgNQNn1_fzcNCS6YkLptXGfMc-YMr8i85Qxw6=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-03067517">
+                            SUMMER SALE: Outdoor plants, including vegetables & our spectacular hanging baskets, BUY 1 GET 1 FREE...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jul 08, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEICAgICrqen0WQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Polites (Polites Florist)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>86,475</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>367 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipN3cvcP-tWSydkiJ7ED07zmTpOK18n7Szrrl1lk=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-94871179">
+                            Get ready for St. Patrick's Day with one dozen green carnations...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 13, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.politesflorist.com/cgi-bin/politesitem-dba.cgi/TopOfTheMorning#body" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgMDQ_e7G3gE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        No image available
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-67325195">
+                            🍂 Fall is in Full Bloom! 🍂
+Bring the warmth and beauty of the season...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 03, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://www.politesflorist.com/Fall" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgIDn9J_3Kw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNP7SwAsW6nT1HG5j12LwLOQ94nYu00dghsb8f1=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-offer">OFFER</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-82474349">
+                            Last Chance to Celebrate Rose Month with $20 Off a Dozen Roses any Color!
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jun 26, 2023</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgICJlo_jWA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNYdXZH2eDoh79Qt_KP_4QH1_dhHD66T1H8V7s-=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-71182924">
+                            New Arrangement Alert! Day Dream Beauty is just the thing for spring!
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 22, 2023</div>
+                        <div class="post-actions">
+                            <a href="https://www.politesflorist.com/cgi-bin/politesitem-dba.cgi/DayDreamBeauty" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgICR4Ln7UQ" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Pozitivf (Pozitivf Fertility)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>54,150</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>528 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNistujxZofjCJ1GpEQsCB0fpPwsyX5W7Xfs_Oo=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-12314680">
+                            Understanding the Cost of IVF: What You Need to Know...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 03, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://pozitivf.com/blog/b/understanding-the-cost-of-ivf-what-you-need-to-know" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=11459052940065774956&use=posts&lpsid=CIHM0ogKEICAgIDnjJ6r-QE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOJxmsvrVLy8xBzenUv5amhkPqH21ynhHbB7F6y=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-78096262">
+                            Dr. Paco Answers - I have PCOS and Diabetes. What can I do to get pregnant?...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jul 17, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=11459052940065774956&use=posts&lpsid=CIHM0ogKEICAgIDrnvKQhwE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPoxcbnQ2LnZ6waQ0iBkPY20ggj5jyU4OuMXO3-=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-51562562">
+                            🌟 Increase your chances of success with IVF! 🌟...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">May 01, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://pozitivf.com/blog/b/how-to-increase-your-chances-of-ivf-success-expert-tips-for-a-successful-ivf-journey" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=11459052940065774956&use=posts&lpsid=CIHM0ogKEICAgIDj6sf0dA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPKXTtgQpbCs3xDahSBNsWtmt4gjoMmambxEUNW=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-46747164">
+                            The Pozitivf Team wearing orange to commemorate National Infertility Awareness Week...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Apr 25, 2024</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=11459052940065774956&use=posts&lpsid=CIHM0ogKEICAgICjs6HJ0QE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Radebaugh (Radebaugh Florist and Greenhouses)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>206,090</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>3 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMyWpP3qbJHBxufTDBQTqYQ7KDJjV4R4CPmziGM=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-event">EVENT</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-90737422">
+                            Spring Florals Design Class
+Celebrate the beauty of spring and learn the art of floral design...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 12, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.radebaugh.com/events/spring-florals-design-class-3/19-6pm/" class="cta-button" target="_blank">Sign Up</a>
+                            <a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEO723rTl15uSCw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipN4gmQB2yAjpzKqD337mKrfGdw7RpLsY-40rXZl=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-event">EVENT</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-89278929">
+                            Sip & Plant: Spring Bulb Planter Workshop...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 12, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.radebaugh.com/events/sip-and-plant-workshop-3/19-6pm/" class="cta-button" target="_blank">Sign Up</a>
+                            <a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEPPkoOfK6-na9QE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPDYPg__R-Taf8X-648BgdkyEuD8Il7v-ezJxcF=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-offer">OFFER</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-66676526">
+                            PRIMROSE SALE
+Brighten your home with the cheerful colors of spring...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 12, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEJrK0NWx0ZWwkQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipOmUpn6ORZ5OxIWlBchkEUi3TVrG6KxUlZ9OpHY=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-03997119">
+                            🍀 St. Patrick's Day Plants – Baltimore & Towson, MD 🌼...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Mar 02, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.radebaugh.com/cat-st-patricks-day/irish-bouquets-plants-gifts/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEPXngNDxs4_BLA" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">Rockcastle (Rockcastle Florist)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>115,610</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>43 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMnYHhmlgA01zJSE9WNFXyLflb76Mk2oWT7pewJ=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-65065218">
+                            https://www.rockcastleflorist.com/about/blog/spring-awakening--florals-that-capture-the-joy-and-color-of-the-season-s-return/
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.rockcastleflorist.com/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEOOwqfXI687kWg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNIEZ0_cahNgH4airInPOIqmkW8dVQ0d6KI7BQf=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-34170860">
+                            Local Same Day & Express Delivery In Rochester & Canandaigua | Nationwide Same Day Delivery...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Jan 31, 2026</div>
+                        <div class="post-actions">
+                            <a href="https://www.rockcastleflorist.com/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEMr7ydWB-rfdgAE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNYFSetLxtONDBQqwC2LFzZBhTZegoFoPZVB48t=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-41854212">
+                            Say "thank you" this season with a stunning Thanksgiving bouquet...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.rockcastleflorist.com/flowers/thanksgiving/" class="cta-button" target="_blank">Order Now</a>
+                            <a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEOj1i5-zpujarQE" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipMJAD39h4JIKys9bJZy6_sivFE8DN14_Lnky3Ud=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-61504286">
+                            At Rockcastle Florist, we believe that the true art of gifting lies in the spontaneous floral surprise...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Oct 08, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://www.rockcastleflorist.com/about/blog/-just-because-blooms-the-art-of-sending-spontaneous-floral-surprises/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEK2kus-Zx6OkBg" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="business-section">
+            <div class="business-header">
+                <div class="business-name">The Creative Kitchen TCK (The Creative Kitchen Co)</div>
+                <div class="business-meta">
+                    <div class="meta-item">
+                        <span>Total Views: <strong>13,462</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Last posted: <strong>121 days ago</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipNpOiyzDbjZLuRCUTcyb1O5-nkM_jAsRrtgninn=w600" alt="Post image" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-badges">
+                            <span class="badge badge-standard">STANDARD</span>
+                        </div>
+                        <div class="post-text collapsed" id="text-04953340">
+                            The Kitchen Island Debate: Is It Right for Your Kitchen Remodel?...
+                        </div>
+                        <button class="read-more-btn" onclick="toggleText(this)">Read more</button>
+                        <div class="post-date">Nov 14, 2025</div>
+                        <div class="post-actions">
+                            <a href="https://thecreativekitchenco.com/kitchen-island-debate/" class="cta-button" target="_blank">Learn More</a>
+                            <a href="https://local.google.com/place?id=3028870225676529794&use=posts&lpsid=CIHM0ogKEOrxpPaM4Pr1Cw" class="google-link" target="_blank">View on Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Generated on March 16, 2026 at 12:00 AM</p>
+        <p>TWM (Two Wheels Marketing) - Adzviser Connected Clients Report</p>
+    </footer>
+
+    <script>
+        function toggleText(button) {
+            const textDiv = button.previousElementSibling;
+            textDiv.classList.toggle('collapsed');
+            button.textContent = textDiv.classList.contains('collapsed') ? 'Read more' : 'Read less';
+        }
+    </script>
+</body>
+</html>
