@@ -148,7 +148,9 @@
         .card-footer {
             padding: 12px 16px; border-top: 1px solid #1a1a2e;
             display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            flex-wrap: wrap;
         }
+        .card-footer-links { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
         .topic-badge {
             display: inline-block; padding: 3px 8px; border-radius: 4px;
             font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
@@ -162,10 +164,15 @@
             font-weight: 600; background: rgba(233,69,96,0.15); color: #e94560;
         }
         .view-link {
-            font-size: 0.8rem; color: #e94560; text-decoration: none;
-            display: flex; align-items: center; gap: 4px;
+            font-size: 0.78rem; color: #e94560; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 20px;
+            background: rgba(233,69,96,0.12); border: 1px solid rgba(233,69,96,0.3);
+            white-space: nowrap; transition: background 0.15s;
         }
-        .view-link:hover { text-decoration: underline; }
+        .view-link:hover { background: rgba(233,69,96,0.25); text-decoration: none; }
+        .gmaps-link { background: rgba(66,133,244,0.12); color: #4285f4; border-color: rgba(66,133,244,0.3); }
+        .gmaps-link:hover { background: rgba(66,133,244,0.25); }
 
         /* No posts */
         .no-posts-section {
@@ -434,7 +441,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -447,7 +455,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -460,7 +469,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -473,7 +483,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -486,7 +497,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -499,7 +511,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -512,7 +525,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=1579935302011776558" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -538,7 +552,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPMEFrDlJeFmlck9KKgAhyXUMJAXRVAwXSexTQO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -551,7 +566,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNC8SRupijM9uj1DCZ31YQDeEhG2XzARoTQb7xh=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -564,7 +580,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN7napmHAeabx7Etp5J35LBvGx101PFCjaBP0S9=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -577,7 +594,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPEy5oE6XLN_pq6Fh9A38j7QMsRqByTgvG7y6a3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -590,7 +608,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMpy7gLVcdc-_yWuqURDmjYslnY_1eovH2kCtwv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -603,7 +622,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMzNadInlm1bo3tV-RwJn5EOEyNakwOLIWGkCN-=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -616,7 +636,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipODut_8mML0gatFxBQbTPRhoMQLljy2CqjC-PAO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -629,7 +650,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=8873844384929036811" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -654,8 +676,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4170389184517170520" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -667,8 +688,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4170389184517170520" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -680,8 +700,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4170389184517170520" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -693,8 +712,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4170389184517170520" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -719,8 +737,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/is-surrogacy-ethical-debating-the-moral-questions/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.accelconceptions.com/is-surrogacy-ethical-debating-the-moral-questions/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=13284498715474189317" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPguDgSOcS6vSkV0_PSCmQxx0sW9aSUx5bGZopN=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -732,8 +749,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.accelconceptions.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.accelconceptions.com/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=13284498715474189317" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -745,8 +761,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=13284498715474189317" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -758,8 +773,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=13284498715474189317" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -784,8 +798,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=5037247426256700576" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipO8NCETi3BRGwfhaM642-pUEtXXMmpMsnI7bb6L=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -797,8 +810,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=5037247426256700576" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMnYHhmlgA01zJSE9WNFXyLflb76Mk2oWT7pewJ=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -810,8 +822,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=5037247426256700576" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNIEZ0_cahNgH4airInPOIqmkW8dVQ0d6KI7BQf=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
@@ -823,8 +834,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=5037247426256700576" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -849,8 +859,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/projects/how-to-prioritize-your-remodel-when-tackling-multiple-spaces" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.davefox.com/projects/how-to-prioritize-your-remodel-when-tackling-multiple-spaces" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4560429990464754921" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -862,8 +871,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/ideas/using-color-psychology-to-guide-your-home-remodel-choices" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.davefox.com/ideas/using-color-psychology-to-guide-your-home-remodel-choices" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4560429990464754921" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -875,8 +883,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/resource-center/creating-a-cohesive-look-across-multiple-rooms-in-a-remodel" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.davefox.com/resource-center/creating-a-cohesive-look-across-multiple-rooms-in-a-remodel" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4560429990464754921" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -888,8 +895,7 @@
         </div>
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/resource-center/standing-desks-and-ergonomics-in-home-office-remodels" target="_blank" class="view-link">View ↗</a>
-        </div>
+            <div class="card-footer-links"><a href="https://www.davefox.com/resource-center/standing-desks-and-ergonomics-in-home-office-remodels" target="_blank" class="view-link">View ↗</a><a href="https://maps.google.com/maps?cid=4560429990464754921" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -915,7 +921,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -928,7 +935,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -941,7 +949,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -954,7 +963,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -967,7 +977,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -980,7 +991,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -993,7 +1005,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=18266237501763358288" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
@@ -1019,7 +1032,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=6718936386242256994" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
         <div class="card">
         <div class="card-img-placeholder">🌸</div>
@@ -1032,7 +1046,8 @@
         <div class="card-footer">
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
-        </div>
+        
+            <div class="card-footer-links"><a href="https://maps.google.com/maps?cid=6718936386242256994" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
     </div>
     </div>
 </div>
