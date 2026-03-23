@@ -126,6 +126,7 @@
         }
         .summary-table tr:last-child td { border-bottom: none; }
         .summary-table tr:hover td { background: rgba(255,255,255,0.03); }
+        .client-link:hover { text-decoration: underline !important; }
         .progress-bar-wrap {
             background: #0f0f1a;
             border-radius: 100px;
@@ -136,7 +137,6 @@
         .progress-bar-fill {
             height: 100%;
             border-radius: 100px;
-            transition: width 0.3s;
         }
         .fill-green { background: #22c55e; }
         .fill-yellow { background: #eab308; }
@@ -153,20 +153,61 @@
         .status-yellow { background: rgba(234,179,8,0.15); color: #eab308; }
         .status-red { background: rgba(239,68,68,0.15); color: #ef4444; }
 
-        /* Card Grid */
-        .section-header {
-            padding: 8px 32px 16px;
+        /* Client Sections */
+        .client-section {
+            margin: 0 0 40px;
+        }
+        .client-section-header {
+            padding: 14px 32px;
+            background: #1a1a2e;
+            border-top: 3px solid #2a2a4a;
+            border-bottom: 1px solid #2a2a4a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .client-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .client-name {
             font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .client-post-count {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .back-to-top {
+            font-size: 0.8rem;
+            color: #e94560;
+            text-decoration: none;
+            white-space: nowrap;
+            padding: 4px 10px;
+            border: 1px solid rgba(233,69,96,0.3);
+            border-radius: 100px;
+            transition: background 0.2s;
+        }
+        .back-to-top:hover {
+            background: rgba(233,69,96,0.1);
+        }
+        .posts-divider {
+            padding: 20px 32px 4px;
+            font-size: 1.0rem;
             font-weight: 600;
             color: #ccc;
-            border-bottom: 1px solid #1a1a2e;
-            margin-bottom: 24px;
         }
+
+        /* Card Grid */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
-            padding: 0 32px 32px;
+            padding: 20px 32px 0;
         }
         .card {
             background: #12122a;
@@ -279,6 +320,38 @@
         }
         .view-link:hover { text-decoration: underline; }
 
+        /* No Posts Section */
+        .no-posts-section {
+            margin: 0 32px 40px;
+            background: #12122a;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .no-posts-header {
+            padding: 14px 20px;
+            background: rgba(239,68,68,0.08);
+            border-bottom: 1px solid rgba(239,68,68,0.2);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ef4444;
+        }
+        .no-posts-list {
+            list-style: none;
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 8px;
+        }
+        .no-posts-list li {
+            font-size: 0.875rem;
+            color: #888;
+            padding: 6px 12px;
+            background: #0f0f1a;
+            border-radius: 6px;
+        }
+        .no-posts-list li::before { content: "—  "; color: #444; }
+
         .updated-at {
             text-align: center;
             color: #444;
@@ -290,12 +363,13 @@
             header { flex-direction: column; gap: 12px; padding: 16px; }
             .stats-bar { flex-wrap: wrap; gap: 16px; padding: 16px; }
             .exec-summary { margin: 16px; }
-            .card-grid { padding: 0 16px 24px; grid-template-columns: 1fr; }
-            .section-header { padding: 8px 16px 12px; }
+            .card-grid { padding: 16px 16px 0; grid-template-columns: 1fr; }
+            .client-section-header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
+            .no-posts-section { margin: 0 16px 32px; }
         }
     </style>
 </head>
-<body>
+<body id="top">
 
 <header>
     <div class="logo-area">
@@ -324,7 +398,7 @@
 <!-- Executive Summary -->
 <div class="exec-summary">
     <div class="exec-title">Monthly Posting Summary — March 2026</div>
-    <div class="exec-subtitle">Goal: 2 posts per business per month</div>
+    <div class="exec-subtitle">Goal: 2 posts per business per month · Click a business name to jump to their posts</div>
     <div class="status-pills">
         <div class="pill pill-green">
             <span class="pill-count">7</span>
@@ -349,9 +423,8 @@
             </tr>
         </thead>
         <tbody>
-
             <tr>
-                <td style="font-weight:500;color:#ddd;">Aebersold Florist</td>
+                <td><a href="#aebersold-florist" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Aebersold Florist</a></td>
                 <td style="color:#aaa;">7 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -361,7 +434,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Radebaugh Florist and Greenhouses</td>
+                <td><a href="#radebaugh-florist-and-greenhouses" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Radebaugh Florist and Greenhouses</a></td>
                 <td style="color:#aaa;">4 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -371,7 +444,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Anaheim Hills Florist</td>
+                <td><a href="#anaheim-hills-florist" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Anaheim Hills Florist</a></td>
                 <td style="color:#aaa;">3 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -381,7 +454,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Accel Conceptions, Inc.</td>
+                <td><a href="#accel-conceptions-inc" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Accel Conceptions, Inc.</a></td>
                 <td style="color:#aaa;">2 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -391,7 +464,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Rockcastle Florist</td>
+                <td><a href="#rockcastle-florist" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Rockcastle Florist</a></td>
                 <td style="color:#aaa;">2 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -401,7 +474,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Dave Fox Design Build Remodelers</td>
+                <td><a href="#dave-fox-design-build-remodelers" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Dave Fox Design Build Remodelers</a></td>
                 <td style="color:#aaa;">2 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -411,7 +484,7 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Monroe Florist & Flower Delivery</td>
+                <td><a href="#monroe-florist-flower-delivery" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Monroe Florist & Flower Delivery</a></td>
                 <td style="color:#aaa;">2 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
@@ -421,111 +494,111 @@
                 <td><span class="status-badge status-green">On Track</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Hodys Florist</td>
+                <td><a href="#hodys-florist" style="font-weight:500;color:#e94560;text-decoration:none;" class="client-link">Hodys Florist</a></td>
                 <td style="color:#aaa;">1 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-yellow" style="width:50.0%"></div>
+                        <div class="progress-bar-fill fill-yellow" style="width:50%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-yellow">Behind</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Polites Florist</td>
+                <td><span style="font-weight:500;color:#ddd;">Polites Florist</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Bedford Village Flower Shoppe</td>
+                <td><span style="font-weight:500;color:#ddd;">Bedford Village Flower Shoppe</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Blooms in Bunches</td>
+                <td><span style="font-weight:500;color:#ddd;">Blooms in Bunches</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Dottie's Flowers & Plants</td>
+                <td><span style="font-weight:500;color:#ddd;">Dottie's Flowers & Plants</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Four Seasons Flowers</td>
+                <td><span style="font-weight:500;color:#ddd;">Four Seasons Flowers</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Longmont Florist</td>
+                <td><span style="font-weight:500;color:#ddd;">Longmont Florist</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Pozitivf Fertility</td>
+                <td><span style="font-weight:500;color:#ddd;">Pozitivf Fertility</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">The Creative Kitchen Co</td>
+                <td><span style="font-weight:500;color:#ddd;">The Creative Kitchen Co</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Penny's by Plaza Flowers</td>
+                <td><span style="font-weight:500;color:#ddd;">Penny's by Plaza Flowers</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
             </tr>
             <tr>
-                <td style="font-weight:500;color:#ddd;">Nancy's Floral, Inc.</td>
+                <td><span style="font-weight:500;color:#ddd;">Nancy's Floral, Inc.</span></td>
                 <td style="color:#aaa;">0 / 2</td>
                 <td>
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0.0%"></div>
+                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
                     </div>
                 </td>
                 <td><span class="status-badge status-red">No Posts</span></td>
@@ -534,9 +607,17 @@
     </table>
 </div>
 
-<!-- Post Cards -->
-<div class="section-header">Recent Posts — Last 90 Days (sorted newest first)</div>
-<div class="card-grid">
+<!-- Post sections by client -->
+<div id="anaheim-hills-florist" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Anaheim Hills Florist</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">3 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPA3tG5UbwxdXV...=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -545,11 +626,67 @@
             <div class="card-text">Peach garden roses, soft blue delphinium, and just enough fresh green to make it feel like spring walked into the room. Balanced. Textured. Effortless (even though we know it's not 😉).</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Mar 13, 2026</div>
+            <div class="card-text">Bud vases are having a moment… and we're not mad about it. Small, intentional, and endlessly versatile — these little beauties make a big impact.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Mar 06, 2026</div>
+            <div class="card-text">Here's proof that a simple vase of red roses can change the entire vibe of your desk. Trust us… it works every time.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Feb 27, 2026</div>
+            <div class="card-text">A closer look at why we love what we do 🌺 — the artistry, the care, and the joy of creating beautiful floral arrangements for our Anaheim Hills community.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Feb 13, 2026</div>
+            <div class="card-text">Soft pinks, warm orange roses, and fresh green accents, all wrapped up in our cute pink tote bag 💕 Valentine's Day is coming up fast, and this one is guaranteed to make someone smile.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Feb 06, 2026</div>
+            <div class="card-text">Our designers are putting the finishing touches on one of our Valentine's favorites from our Valentina Collection 💗 — pure elegance and romance in every stem.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Anaheim Hills Florist</div>
+            <div class="card-date">📅 Jan 30, 2026</div>
+            <div class="card-text">Free Spirit Roses doing what they do best, showing off layers, movement, and that effortless 'just right' color blend. We loved designing this one as much as you'll love receiving it.</div>
             
         </div>
     </div>
+</div>
+
+<div id="aebersold-florist" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Aebersold Florist</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">7 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN6Yk7ItWkqm3b6LSE-6OBR_ihirRKVJxqKjt3N=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -562,20 +699,6 @@
             <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
             
         </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipO...=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Mar 18, 2026</div>
-            <div class="card-text">Shop online at Monroe Florist for beautiful hand-crafted flower arrangements with same-day local delivery to Monroe, MI.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPMEFrDlJeFmlck9KKgAhyXUMJAXRVAwXSexTQO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -584,11 +707,112 @@
             <div class="card-text">A NEW CHAPTER BEGINS! 🍼 Celebrate new beginnings with a baby by sending a hand-crafted bouquet that brings warmth to their new world.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNC8SRupijM9uj1DCZ31YQDeEhG2XzARoTQb7xh=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Mar 16, 2026</div>
+            <div class="card-text">When you shop with a local florist like us, you're helping shape your community all while spreading some joy ♥️ #supportlocalbusiness #shoplocal #spreadjoy</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN7napmHAeabx7Etp5J35LBvGx101PFCjaBP0S9=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Mar 11, 2026</div>
+            <div class="card-text">STOP THE SCROLL! 🧡 Your simple like or follow is the heartbeat of our local floral business. Help us keep blooming and sharing our passion with the community — every click truly counts!</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPEy5oE6XLN_pq6Fh9A38j7QMsRqByTgvG7y6a3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Mar 09, 2026</div>
+            <div class="card-text">REFRESH YOUR SPACE! There's nothing like professional floral design to bring a touch of luxury to your home decor. Transform your sanctuary with the beauty of expert-level artistry today! 🧡</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMpy7gLVcdc-_yWuqURDmjYslnY_1eovH2kCtwv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Mar 04, 2026</div>
+            <div class="card-text">CELEBRATION VIBES! Flowers are the ultimate way to level up any birthday, anniversary, or gathering. 💐 Let the petals set the mood and bring the energy to your next big moment! 🧡</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMzNadInlm1bo3tV-RwJn5EOEyNakwOLIWGkCN-=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Mar 02, 2026</div>
+            <div class="card-text">MAKE IT ICONIC! ✨ From intimate dinners to massive milestones, flowers bring the 'main character' energy every party needs. 🎂 Transform your space and celebrate in style!</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipODut_8mML0gatFxBQbTPRhoMQLljy2CqjC-PAO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Aebersold Florist</div>
+            <div class="card-date">📅 Feb 23, 2026</div>
+            <div class="card-text">Having a local florist hand-design your sympathy flowers is a true show of love. 🕊️ Every detail and petal is felt deeply and will reflect your sentiment perfectly.</div>
             
         </div>
     </div>
+</div>
+
+<div id="monroe-florist-flower-delivery" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Monroe Florist & Flower Delivery</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">2 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipO...=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Monroe Florist & Flower Delivery</div>
+            <div class="card-date">📅 Mar 18, 2026</div>
+            <div class="card-text">Shop online at Monroe Florist for beautiful hand-crafted flower arrangements with same-day local delivery to Monroe, MI.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Monroe Florist & Flower Delivery</div>
+            <div class="card-date">📅 Mar 17, 2026</div>
+            <div class="card-text">Custom bouquets, elegant gift baskets, and same-day floral delivery — each arrangement designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Monroe Florist & Flower Delivery</div>
+            <div class="card-date">📅 Jan 31, 2026</div>
+            <div class="card-text">Elevating the Everyday: Floral Arrangements that Transform Your Mood — a guide from Monroe Florist.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Monroe Florist & Flower Delivery</div>
+            <div class="card-date">📅 Jan 31, 2026</div>
+            <div class="card-text">We specialize in custom bouquets, elegant gift baskets, and same-day floral delivery. Each arrangement is designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
+            
+        </div>
+    </div>
+</div>
+
+<div id="accel-conceptions-inc" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Accel Conceptions, Inc.</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">2 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOa-FIk7N30psQDSmNeiPHuAgMSC9DovuCsYPNL=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -597,11 +821,6 @@
             <div class="card-text">Surrogacy is life-changing but raises ethical questions. Learn how Accel Conceptions protects the rights of children, surrogates, and intended parents through fair, transparent, and responsible practices.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/is-surrogacy-ethical-debating-the-moral-questions/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPguDgSOcS6vSkV0_PSCmQxx0sW9aSUx5bGZopN=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -610,11 +829,35 @@
             <div class="card-text">Disqualifications for surrogacy — are you eligible? Learn what criteria may affect your ability to become a surrogate or work with a surrogate agency.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.accelconceptions.com/" target="_blank" class="view-link">View ↗</a>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Accel Conceptions, Inc.</div>
+            <div class="card-date">📅 Jan 28, 2026</div>
+            <div class="card-text">How to find a surrogate gestational carrier — a comprehensive guide from Accel Conceptions.</div>
+            
+        </div>
+    <div class="card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-body">
+            <div class="card-business">Accel Conceptions, Inc.</div>
+            <div class="card-date">📅 Jan 28, 2026</div>
+            <div class="card-text">Coping strategies during the surrogacy process — tips for staying emotionally and mentally healthy throughout your journey.</div>
+            
         </div>
     </div>
+</div>
+
+<div id="rockcastle-florist" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Rockcastle Florist</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">2 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOmq23aHrY-eJwSWsKzuHHZZSZHHpCZ4-QfOmvv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -642,292 +885,6 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">How to prioritize your remodel when tackling multiple spaces — expert advice from Dave Fox Design Build Remodelers.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/projects/how-to-prioritize-your-remodel-when-tackling-multiple-spaces" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Using color psychology to guide your home remodel choices — discover how the right colors can transform your living spaces.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/ideas/using-color-psychology-to-guide-your-home-remodel-choices" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Custom bouquets, elegant gift baskets, and same-day floral delivery — each arrangement designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNC8SRupijM9uj1DCZ31YQDeEhG2XzARoTQb7xh=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 16, 2026</div>
-            <div class="card-text">When you shop with a local florist like us, you're helping shape your community all while spreading some joy ♥️ #supportlocalbusiness #shoplocal #spreadjoy</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Mar 13, 2026</div>
-            <div class="card-text">Bud vases are having a moment… and we're not mad about it. Small, intentional, and endlessly versatile — these little beauties make a big impact.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">Spring Florals Design Class — Join us Thursday, March 19th at 6 PM for a hands-on evening creating a fresh seasonal arrangement. Our floral designers will guide you step-by-step.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">Sip & Plant: Spring Bulb Planter Workshop — Join us Thursday, March 19th at 6 PM in our greenhouse for a relaxing evening creating your own spring bulb planter.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">PRIMROSE SALE — March 1st–31st, enjoy 20% off all 4.5" primrose pots. These vibrant, early-blooming favorites are perfect for adding a pop of color to your porch, windowsill, or seasonal décor.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN7napmHAeabx7Etp5J35LBvGx101PFCjaBP0S9=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 11, 2026</div>
-            <div class="card-text">STOP THE SCROLL! 🧡 Your simple like or follow is the heartbeat of our local floral business. Help us keep blooming and sharing our passion with the community — every click truly counts!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPEy5oE6XLN_pq6Fh9A38j7QMsRqByTgvG7y6a3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 09, 2026</div>
-            <div class="card-text">REFRESH YOUR SPACE! There's nothing like professional floral design to bring a touch of luxury to your home decor. Transform your sanctuary with the beauty of expert-level artistry today! 🧡</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Hodys Florist</div>
-            <div class="card-date">📅 Mar 07, 2026</div>
-            <div class="card-text">We Deliver to Brentwood and Franklin every Saturday too! Hodys Florist — your local Nashville florist for all occasions.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Mar 06, 2026</div>
-            <div class="card-text">Here's proof that a simple vase of red roses can change the entire vibe of your desk. Trust us… it works every time.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMpy7gLVcdc-_yWuqURDmjYslnY_1eovH2kCtwv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 04, 2026</div>
-            <div class="card-text">CELEBRATION VIBES! Flowers are the ultimate way to level up any birthday, anniversary, or gathering. 💐 Let the petals set the mood and bring the energy to your next big moment! 🧡</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 02, 2026</div>
-            <div class="card-text">🍀 St. Patrick's Day Plants – Baltimore & Towson, MD. Celebrate with fresh shamrocks, blooming daffodils, and colorful primrose planters! Perfect for gifts, home décor, or office celebrations.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMzNadInlm1bo3tV-RwJn5EOEyNakwOLIWGkCN-=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 02, 2026</div>
-            <div class="card-text">MAKE IT ICONIC! ✨ From intimate dinners to massive milestones, flowers bring the 'main character' energy every party needs. 🎂 Transform your space and celebrate in style!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 27, 2026</div>
-            <div class="card-text">A closer look at why we love what we do 🌺 — the artistry, the care, and the joy of creating beautiful floral arrangements for our Anaheim Hills community.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 24, 2026</div>
-            <div class="card-text">🍀 St. Patrick's Day Flowers in Baltimore, MD — limited-edition collection: Lucky Charm, Irish Meadow, and Over the Rainbow. Luxury green and white floral arrangements with lush hydrangea, orchids, and Bells of Ireland.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipODut_8mML0gatFxBQbTPRhoMQLljy2CqjC-PAO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Feb 23, 2026</div>
-            <div class="card-text">Having a local florist hand-design your sympathy flowers is a true show of love. 🕊️ Every detail and petal is felt deeply and will reflect your sentiment perfectly.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 13, 2026</div>
-            <div class="card-text">Soft pinks, warm orange roses, and fresh green accents, all wrapped up in our cute pink tote bag 💕 Valentine's Day is coming up fast, and this one is guaranteed to make someone smile.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 12, 2026</div>
-            <div class="card-text">How to Order Fast for Valentine's Day — Browse roses, arrangements, wine crates, stuffed animals, chocolates, and balloons. Add a personalized note. That's it.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 10, 2026</div>
-            <div class="card-text">TODAY ONLY: 🍫 FREE Wockenfuss CHOCOLATES with your order. Choose from red rose arrangements, fresh florals, chocolates, balloons, plush, wine & bubbly. Final chance before Valentine's Day!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 06, 2026</div>
-            <div class="card-text">Our designers are putting the finishing touches on one of our Valentine's favorites from our Valentina Collection 💗 — pure elegance and romance in every stem.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMnYHhmlgA01zJSE9WNFXyLflb76Mk2oWT7pewJ=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
             <div class="card-business">Rockcastle Florist</div>
@@ -935,11 +892,6 @@
             <div class="card-text">Spring Awakening: Florals that capture the joy and color of the season's return.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNIEZ0_cahNgH4airInPOIqmkW8dVQ0d6KI7BQf=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
         <div class="card-body">
@@ -948,11 +900,35 @@
             <div class="card-text">Local Same Day & Express Delivery In Rochester & Canandaigua | Nationwide Same Day Delivery Anywhere In The USA</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a>
-        </div>
     </div>
+</div>
+
+<div id="dave-fox-design-build-remodelers" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Dave Fox Design Build Remodelers</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">2 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Dave Fox Design Build Remodelers</div>
+            <div class="card-date">📅 Mar 17, 2026</div>
+            <div class="card-text">How to prioritize your remodel when tackling multiple spaces — expert advice from Dave Fox Design Build Remodelers.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Dave Fox Design Build Remodelers</div>
+            <div class="card-date">📅 Mar 17, 2026</div>
+            <div class="card-text">Using color psychology to guide your home remodel choices — discover how the right colors can transform your living spaces.</div>
+            
+        </div>
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
@@ -961,11 +937,6 @@
             <div class="card-text">Creating a cohesive look across multiple rooms in a remodel — tips and design principles from Dave Fox.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/resource-center/creating-a-cohesive-look-across-multiple-rooms-in-a-remodel" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
@@ -974,50 +945,96 @@
             <div class="card-text">Standing desks and ergonomics in home office remodels — how to design a workspace that supports productivity and wellbeing.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.davefox.com/resource-center/standing-desks-and-ergonomics-in-home-office-remodels" target="_blank" class="view-link">View ↗</a>
-        </div>
     </div>
+</div>
+
+<div id="radebaugh-florist-and-greenhouses" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Radebaugh Florist and Greenhouses</span>
+            <span class="status-badge status-green">On Track</span>
+            <span class="client-post-count">4 posts in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Elevating the Everyday: Floral Arrangements that Transform Your Mood — a guide from Monroe Florist.</div>
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Mar 12, 2026</div>
+            <div class="card-text">Spring Florals Design Class — Join us Thursday, March 19th at 6 PM for a hands-on evening creating a fresh seasonal arrangement. Our floral designers will guide you step-by-step.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">We specialize in custom bouquets, elegant gift baskets, and same-day floral delivery. Each arrangement is designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Mar 12, 2026</div>
+            <div class="card-text">Sip & Plant: Spring Bulb Planter Workshop — Join us Thursday, March 19th at 6 PM in our greenhouse for a relaxing evening creating your own spring bulb planter.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Jan 30, 2026</div>
-            <div class="card-text">Free Spirit Roses doing what they do best, showing off layers, movement, and that effortless 'just right' color blend. We loved designing this one as much as you'll love receiving it.</div>
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Mar 12, 2026</div>
+            <div class="card-text">PRIMROSE SALE — March 1st–31st, enjoy 20% off all 4.5" primrose pots. These vibrant, early-blooming favorites are perfect for adding a pop of color to your porch, windowsill, or seasonal décor.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Mar 02, 2026</div>
+            <div class="card-text">🍀 St. Patrick's Day Plants – Baltimore & Towson, MD. Celebrate with fresh shamrocks, blooming daffodils, and colorful primrose planters! Perfect for gifts, home décor, or office celebrations.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Feb 24, 2026</div>
+            <div class="card-text">🍀 St. Patrick's Day Flowers in Baltimore, MD — limited-edition collection: Lucky Charm, Irish Meadow, and Over the Rainbow. Luxury green and white floral arrangements with lush hydrangea, orchids, and Bells of Ireland.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Feb 12, 2026</div>
+            <div class="card-text">How to Order Fast for Valentine's Day — Browse roses, arrangements, wine crates, stuffed animals, chocolates, and balloons. Add a personalized note. That's it.</div>
+            
+        </div>
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Radebaugh Florist and Greenhouses</div>
+            <div class="card-date">📅 Feb 10, 2026</div>
+            <div class="card-text">TODAY ONLY: 🍫 FREE Wockenfuss CHOCOLATES with your order. Choose from red rose arrangements, fresh florals, chocolates, balloons, plush, wine & bubbly. Final chance before Valentine's Day!</div>
             
         </div>
     </div>
+</div>
+
+<div id="hodys-florist" class="client-section">
+    <div class="client-section-header">
+        <div class="client-header-left">
+            <span class="client-name">Hodys Florist</span>
+            <span class="status-badge status-yellow">Behind</span>
+            <span class="client-post-count">1 post in March 2026</span>
+        </div>
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+    </div>
+    <div class="card-grid">
+    <div class="card">
+        <div class="card-img-placeholder">🌸</div>
+        <div class="card-body">
+            <div class="card-business">Hodys Florist</div>
+            <div class="card-date">📅 Mar 07, 2026</div>
+            <div class="card-text">We Deliver to Brentwood and Franklin every Saturday too! Hodys Florist — your local Nashville florist for all occasions.</div>
+            
+        </div>
     <div class="card">
         <div class="card-img-placeholder">🌸</div>
         <div class="card-body">
@@ -1026,38 +1043,27 @@
             <div class="card-text">Until Monday 2/2/26 only our Nashville store will be open for walk-in traffic as we adjust to changing weather conditions. Please call to confirm hours.</div>
             
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Jan 28, 2026</div>
-            <div class="card-text">How to find a surrogate gestational carrier — a comprehensive guide from Accel Conceptions.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" target="_blank" class="view-link">View ↗</a>
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Jan 28, 2026</div>
-            <div class="card-text">Coping strategies during the surrogacy process — tips for staying emotionally and mentally healthy throughout your journey.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" target="_blank" class="view-link">View ↗</a>
-        </div>
     </div>
 </div>
+
+<div class="no-posts-section">
+    <div class="no-posts-header">
+        <span>❌ No Posts in Last 90 Days</span>
+    </div>
+    <ul class="no-posts-list">
+        <li>Polites Florist</li>
+        <li>Bedford Village Flower Shoppe</li>
+        <li>Blooms in Bunches</li>
+        <li>Dottie's Flowers & Plants</li>
+        <li>Four Seasons Flowers</li>
+        <li>Longmont Florist</li>
+        <li>Pozitivf Fertility</li>
+        <li>The Creative Kitchen Co</li>
+        <li>Penny's by Plaza Flowers</li>
+        <li>Nancy's Floral, Inc.</li>
+    </ul>
+</div>
+
 <div class="updated-at">Report generated March 23, 2026 at 10:29 AM UTC · Data from Adzviser (Google Business Profile)</div>
 </body>
 </html>
