@@ -1,1073 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GBP Posts Report — March 2026</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0f0f1a;
-            color: #e0e0e0;
-            min-height: 100vh;
-        }
-        header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-bottom: 3px solid #e94560;
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        header h1 { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
-        header h1 span { color: #e94560; }
-        header .report-date { font-size: 0.85rem; color: #aaa; margin-top: 4px; }
-        .logo-area { display: flex; flex-direction: column; }
-
-        .stats-bar {
-            background: #1a1a2e;
-            border-bottom: 1px solid #2a2a4a;
-            padding: 16px 32px;
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-        .stat { display: flex; flex-direction: column; align-items: center; }
-        .stat-value { font-size: 2rem; font-weight: 700; color: #e94560; line-height: 1; }
-        .stat-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
-        .stat-divider { width: 1px; height: 40px; background: #2a2a4a; }
-
-        .exec-summary {
-            background: #12122a;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            margin: 24px 32px;
-            padding: 24px;
-        }
-        .exec-title { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-        .exec-subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
-        .status-pills { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-        .pill { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 100px; font-weight: 600; font-size: 0.9rem; }
-        .pill-green { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
-        .pill-yellow { background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
-        .pill-red { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
-        .pill-count { font-size: 1.4rem; font-weight: 800; }
-
-        .summary-table { width: 100%; border-collapse: collapse; }
-        .summary-table th {
-            text-align: left; padding: 8px 12px; font-size: 0.75rem;
-            text-transform: uppercase; letter-spacing: 0.5px; color: #666;
-            border-bottom: 1px solid #2a2a4a;
-        }
-        .summary-table tr:last-child td { border-bottom: none !important; }
-        .summary-table tr:hover td { background: rgba(255,255,255,0.03); }
-        .client-link {
-            font-weight: 500; color: #e94560; text-decoration: none;
-        }
-        .client-link:hover { text-decoration: underline; }
-        .progress-bar-wrap {
-            background: #0f0f1a; border-radius: 100px; height: 8px; width: 120px; overflow: hidden;
-        }
-        .progress-bar-fill { height: 100%; border-radius: 100px; }
-        .fill-green { background: #22c55e; }
-        .fill-yellow { background: #eab308; }
-        .fill-red { background: #ef4444; }
-        .status-badge {
-            display: inline-block; padding: 3px 10px; border-radius: 100px;
-            font-size: 0.75rem; font-weight: 600;
-        }
-        .status-green { background: rgba(34,197,94,0.15); color: #22c55e; }
-        .status-yellow { background: rgba(234,179,8,0.15); color: #eab308; }
-        .status-red { background: rgba(239,68,68,0.15); color: #ef4444; }
-
-        /* Client sections */
-        .client-section { margin: 0 0 48px; }
-        .client-section-header {
-            padding: 14px 32px;
-            background: #1a1a2e;
-            border-top: 3px solid #2a2a4a;
-            border-bottom: 1px solid #2a2a4a;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .client-header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .client-name { font-size: 1.05rem; font-weight: 700; color: #fff; }
-        .client-post-count { font-size: 0.8rem; color: #666; }
-        .back-to-top {
-            font-size: 0.8rem; color: #e94560; text-decoration: none; white-space: nowrap;
-            padding: 4px 12px; border: 1px solid rgba(233,69,96,0.3); border-radius: 100px;
-        }
-        .back-to-top:hover { background: rgba(233,69,96,0.1); }
-
-        /* Card grid */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            padding: 24px 32px;
-        }
-        .card {
-            background: #12122a;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 32px rgba(233,69,96,0.15);
-            border-color: #e94560;
-        }
-        .card-img { width: 100%; height: 180px; object-fit: cover; background: #1a1a2e; display: block; }
-        .card-img-placeholder {
-            width: 100%; height: 180px;
-            background: linear-gradient(135deg, #1a1a2e, #2a2a4a);
-            display: flex; align-items: center; justify-content: center;
-            color: #444; font-size: 2rem;
-        }
-        .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-        .card-business {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
-            color: #e94560; font-weight: 700; margin-bottom: 6px;
-        }
-        .card-date { font-size: 0.75rem; color: #666; margin-bottom: 10px; }
-        .card-text { font-size: 0.875rem; color: #ccc; line-height: 1.5; flex: 1; }
-        .card-text.truncated {
-            display: -webkit-box; -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .read-more-btn {
-            background: none; border: none; color: #e94560; cursor: pointer;
-            font-size: 0.8rem; padding: 4px 0; text-align: left; margin-top: 4px;
-        }
-        .card-footer {
-            padding: 12px 16px; border-top: 1px solid #1a1a2e;
-            display: flex; align-items: center; justify-content: space-between; gap: 8px;
-            flex-wrap: wrap;
-        }
-        .card-footer-links { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .topic-badge {
-            display: inline-block; padding: 3px 8px; border-radius: 4px;
-            font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .topic-STANDARD { background: rgba(99,102,241,0.2); color: #818cf8; }
-        .topic-EVENT { background: rgba(251,146,60,0.2); color: #fb923c; }
-        .topic-OFFER { background: rgba(34,197,94,0.2); color: #4ade80; }
-        .topic-ALERT { background: rgba(239,68,68,0.2); color: #f87171; }
-        .cta-badge {
-            display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;
-            font-weight: 600; background: rgba(233,69,96,0.15); color: #e94560;
-        }
-        .view-link {
-            font-size: 0.78rem; color: #e94560; text-decoration: none;
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 4px 10px; border-radius: 20px;
-            background: rgba(233,69,96,0.12); border: 1px solid rgba(233,69,96,0.3);
-            white-space: nowrap; transition: background 0.15s;
-        }
-        .view-link:hover { background: rgba(233,69,96,0.25); text-decoration: none; }
-        .gmaps-link { background: rgba(66,133,244,0.12); color: #4285f4; border-color: rgba(66,133,244,0.3); }
-        .gmaps-link:hover { background: rgba(66,133,244,0.25); }
-
-        /* No posts */
-        .no-posts-section {
-            margin: 0 32px 40px; background: #12122a;
-            border: 1px solid #2a2a4a; border-radius: 12px; overflow: hidden;
-        }
-        .no-posts-header {
-            padding: 14px 20px; background: rgba(239,68,68,0.08);
-            border-bottom: 1px solid rgba(239,68,68,0.2);
-            font-size: 1rem; font-weight: 700; color: #ef4444;
-        }
-        .no-posts-list {
-            list-style: none; padding: 16px 20px;
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px;
-        }
-        .no-posts-list li {
-            font-size: 0.875rem; color: #888;
-            padding: 6px 12px; background: #0f0f1a; border-radius: 6px;
-        }
-        .no-posts-list li::before { content: "— "; color: #444; }
-
-        .updated-at { text-align: center; color: #444; font-size: 0.75rem; padding: 16px; }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 12px; padding: 16px; }
-            .stats-bar { flex-wrap: wrap; gap: 16px; padding: 16px; }
-            .exec-summary { margin: 16px; }
-            .card-grid { padding: 16px; grid-template-columns: 1fr; }
-            .client-section-header { padding: 12px 16px; flex-direction: column; align-items: flex-start; }
-            .no-posts-section { margin: 0 16px 32px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBP Posts Report â April 14, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #222; line-height: 1.5; }
+  header { background: #1a73e8; color: #fff; padding: 20px 32px; }
+  header h1 { font-size: 1.6rem; }
+  header p { opacity: .85; font-size: .9rem; margin-top: 4px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+  
+  /* Stats bar */
+  .stats-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat-card { background: #fff; border-radius: 10px; padding: 14px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); min-width: 120px; text-align: center; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: #1a73e8; }
+  .stat-card .lbl { font-size: .78rem; color: #666; text-transform: uppercase; letter-spacing: .5px; }
+  
+  /* Summary table */
+  .summary-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow: hidden; margin-bottom: 32px; }
+  .summary-card h2 { padding: 16px 20px; font-size: 1.1rem; border-bottom: 1px solid #eee; background: #fafafa; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: .9rem; }
+  th { background: #f8f9fa; font-weight: 600; color: #555; text-transform: uppercase; font-size: .78rem; letter-spacing: .5px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbff; }
+  td a { color: #1a73e8; text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  
+  /* Status pills */
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+  .pill-green { background: #e6f4ea; color: #137333; }
+  .pill-yellow { background: #fef7e0; color: #a75300; }
+  .pill-none { background: #fce8e6; color: #c5221f; }
+  .pill-error { background: #f3e8fd; color: #6200ea; }
+  
+  /* Client sections */
+  .client-section { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 28px; overflow: hidden; }
+  .section-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 20px 12px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .section-header h2 { font-size: 1.15rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .post-stats { font-size: .82rem; color: #666; margin-top: 4px; }
+  .back-link { font-size: .82rem; color: #1a73e8; text-decoration: none; white-space: nowrap; margin-top: 4px; }
+  .back-link:hover { text-decoration: underline; }
+  .error-note { padding: 16px 20px; color: #c5221f; font-size: .9rem; }
+  
+  /* Post grid */
+  .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 16px; }
+  .post-card { background: #f9f9f9; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow: hidden; display: flex; flex-direction: column; }
+  .card-img img { width: 100%; height: 160px; object-fit: cover; display: block; }
+  .card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .card-summary { font-size: .85rem; color: #333; flex: 1; }
+  .card-date { font-size: .78rem; color: #888; }
+  .card-footer { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .btn { display: inline-block; padding: 5px 10px; border-radius: 5px; font-size: .78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .btn-cta { background: #1a73e8; color: #fff; }
+  .btn-cta:hover { background: #1558b0; }
+  .btn-google { background: #e8f0fe; color: #1a73e8; }
+  .btn-google:hover { background: #d2e3fc; }
+  .no-posts-note { padding: 16px 20px; color: #666; font-style: italic; font-size: .9rem; }
+  
+  @media (max-width: 600px) {
+    .stats-bar { gap: 10px; }
+    .stat-card { min-width: 100px; padding: 10px 12px; }
+    .post-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
-<body id="top">
-
-<header>
-    <div class="logo-area">
-        <h1>GBP Posts <span>Report</span></h1>
-        <div class="report-date">Two Wheels Marketing · Updated Mar 23, 2026</div>
-    </div>
+<body>
+<header id="top">
+  <h1>ð GBP Posts Report â April 14, 2026</h1>
+  <p>Weekly snapshot of Google Business Profile post activity across all Two Wheels Marketing clients</p>
 </header>
 
-<div class="stats-bar">
-    <div class="stat"><div class="stat-value">18</div><div class="stat-label">Total Businesses</div></div>
-    <div class="stat-divider"></div>
-    <div class="stat"><div class="stat-value">40</div><div class="stat-label">Posts (90 Days)</div></div>
-    <div class="stat-divider"></div>
-    <div class="stat"><div class="stat-value">26</div><div class="stat-label">Posts (Last 30 Days)</div></div>
-</div>
+<div class="container">
 
-<div class="exec-summary">
-    <div class="exec-title">Monthly Posting Summary — March 2026</div>
-    <div class="exec-subtitle">Goal: 2 posts per business per month · Click a business name to jump to their posts ↓</div>
-    <div class="status-pills">
-        <div class="pill pill-green"><span class="pill-count">7</span><span>On Track</span></div>
-        <div class="pill pill-yellow"><span class="pill-count">1</span><span>Behind</span></div>
-        <div class="pill pill-red"><span class="pill-count">10</span><span>No Posts</span></div>
-    </div>
-    <table class="summary-table">
-        <thead><tr>
-            <th>Business</th><th>Posts This Month</th><th>Progress</th><th>Status</th>
-        </tr></thead>
-        <tbody>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#aebersold-florist" class="client-link">Aebersold Florist</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">7 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#radebaugh-florist-and-greenhouses" class="client-link">Radebaugh Florist and Greenhouses</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">4 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#anaheim-hills-florist" class="client-link">Anaheim Hills Florist</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">3 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#accel-conceptions-inc" class="client-link">Accel Conceptions, Inc.</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">2 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#rockcastle-florist" class="client-link">Rockcastle Florist</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">2 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#dave-fox-design-build-remodelers" class="client-link">Dave Fox Design Build Remodelers</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">2 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#monroe-florist-flower-delivery" class="client-link">Monroe Florist & Flower Delivery</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">2 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-green" style="width:100%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-green">On Track</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><a href="#hodys-florist" class="client-link">Hodys Florist</a></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">1 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-yellow" style="width:50%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-yellow">Behind</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Polites Florist</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Bedford Village Flower Shoppe</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Blooms in Bunches</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Dottie's Flowers & Plants</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Four Seasons Flowers</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Longmont Florist</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Pozitivf Fertility</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">The Creative Kitchen Co</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Penny's by Plaza Flowers</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-            <tr>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;"><span style="color:#aaa;">Nancy's Floral, Inc.</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;font-size:0.875rem;color:#aaa;">0 / 2</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;">
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill fill-red" style="width:0%"></div>
-                    </div>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #1a1a2e;"><span class="status-badge status-red">No Posts</span></td>
-            </tr>
-        </tbody>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="num">18</div><div class="lbl">Businesses</div></div>
+    <div class="stat-card"><div class="num">7</div><div class="lbl">On Track</div></div>
+    <div class="stat-card"><div class="num">1</div><div class="lbl">Behind</div></div>
+    <div class="stat-card"><div class="num">10</div><div class="lbl">Data Errors</div></div>
+    <div class="stat-card"><div class="num">27</div><div class="lbl">Posts (90 days)</div></div>
+    <div class="stat-card"><div class="num">22</div><div class="lbl">Posts (30 days)</div></div>
+  </div>
+
+  <div class="summary-card">
+    <h2>Summary â All Clients</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Business</th>
+          <th>Status</th>
+          <th>Posts (90 days)</th>
+          <th>Posts (30 days)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td><a href="#accel-conceptions">Accel Conceptions</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>6</td>
+        <td>4</td>
+    </tr>
+<tr>
+        <td><a href="#bedford-village">Bedford Village</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>2</td>
+        <td>2</td>
+    </tr>
+<tr>
+        <td><a href="#nancys-floral">Nancy's Floral</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>2</td>
+        <td>2</td>
+    </tr>
+<tr>
+        <td><a href="#radebaugh">Radebaugh</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>6</td>
+        <td>5</td>
+    </tr>
+<tr>
+        <td><a href="#hodys">Hody's</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>3</td>
+        <td>1</td>
+    </tr>
+<tr>
+        <td><a href="#pflorist">Pflorist</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>2</td>
+        <td>2</td>
+    </tr>
+<tr>
+        <td><a href="#aebersold-florist">Aebersold Florist</a></td>
+        <td><span class="pill pill-green">On Track</span></td>
+        <td>6</td>
+        <td>6</td>
+    </tr>
+<tr>
+        <td><a href="#polites">Polites</a></td>
+        <td><span class="pill pill-yellow">Behind</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#blooms-in-bunches">Blooms in Bunches</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#dotties-flowers">Dotties Flowers</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#4-seasons">4 Seasons</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#dave-fox">Dave Fox</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#longmont-florist">Longmont Florist</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#pozitivf">Pozitivf</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#the-creative-kitchen-tck">The Creative Kitchen TCK</a></td>
+        <td><span class="pill pill-error">Auth Error</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#monroe-florist">Monroe Florist</a></td>
+        <td><span class="pill pill-error">Data Unavailable</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#anaheim-hills">Anaheim Hills</a></td>
+        <td><span class="pill pill-error">Data Unavailable</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+<tr>
+        <td><a href="#rockcastle">Rockcastle</a></td>
+        <td><span class="pill pill-error">Data Unavailable</span></td>
+        <td>â</td>
+        <td>â</td>
+    </tr>
+
+      </tbody>
     </table>
-</div>
+  </div>
 
-<div id="anaheim-hills-florist" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Anaheim Hills Florist</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">3 posts in March 2026</span>
+  <section class="client-section" id="accel-conceptions">
+    <div class="section-header">
+        <div>
+            <h2>Accel Conceptions <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">6 posts (90 days) Â· 4 posts (30 days)</p>
         </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPA3tG5UbwxdXV...=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Mar 20, 2026</div>
-            <div class="card-text">Peach garden roses, soft blue delphinium, and just enough fresh green to make it feel like spring walked into the room. Balanced. Textured. Effortless (even though we know it's not 😉).</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEIjzr-uMmtT3Cw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipN1bKCgWvxvxPmKNkQNbDquvJLevIvBSBXV7MR3=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Surrogacy offers a life-changing experience for those longing to be parents.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/what-is-the-surrogate-mother-age-limit/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEL2EybWX0p34mgE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Mar 13, 2026</div>
-            <div class="card-text">Bud vases are having a moment… and we're not mad about it. Small, intentional, and endlessly versatile — these little beauties make a big impact.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEOuU65b8_NHQQA" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipP5WDwjNppdP80xU1sd1LySf06ABGK7DYyf50Kf=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Families come in a variety of formats, and how you build your family can take many forms.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/surrogacy-vs-adoption-making-the-right-choice-for-you/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKELTL1baAt9iWcw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Mar 06, 2026</div>
-            <div class="card-text">Here's proof that a simple vase of red roses can change the entire vibe of your desk. Trust us… it works every time.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEJOMkOjv5L7vXQ" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipOa-FIk7N30psQDSmNeiPHuAgMSC9DovuCsYPNL=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Surrogacy is life-changing but raises ethical questions. Learn how Accel Conceptions protects the rights of children, su...</p>
+        <p class="card-date">2026-03-17</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/is-surrogacy-ethical-debating-the-moral-questions/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEI7x7cfToaKnVw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 27, 2026</div>
-            <div class="card-text">A closer look at why we love what we do 🌺 — the artistry, the care, and the joy of creating beautiful floral arrangements for our Anaheim Hills community.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEPTb1t6p-fz7igE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPguDgSOcS6vSkV0_PSCmQxx0sW9aSUx5bGZopN=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Disqualifications for surrogacy â are you eligible?</p>
+        <p class="card-date">2026-03-17</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEMLTs_XjsfD1Zw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 13, 2026</div>
-            <div class="card-text">Soft pinks, warm orange roses, and fresh green accents, all wrapped up in our cute pink tote bag 💕 Valentine's Day is coming up fast, and this one is guaranteed to make someone smile.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEN7P2cXJormYIw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">How to find a surrogate gestational carrier.</p>
+        <p class="card-date">2026-01-28</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKENbIxreQpNKw3gE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Feb 06, 2026</div>
-            <div class="card-text">Our designers are putting the finishing touches on one of our Valentine's favorites from our Valentina Collection 💗 — pure elegance and romance in every stem.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEK-JlvqqmY721wE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Anaheim Hills Florist</div>
-            <div class="card-date">📅 Jan 30, 2026</div>
-            <div class="card-text">Free Spirit Roses doing what they do best, showing off layers, movement, and that effortless 'just right' color blend. We loved designing this one as much as you'll love receiving it.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=1579935302011776558&use=posts&lpsid=CIHM0ogKEOOUw9K95MfAAg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Coping strategies during the surrogacy process.</p>
+        <p class="card-date">2026-01-28</p>
+        <div class="card-footer"><a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEJDh-OL2mfKiKg" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="aebersold-florist" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Aebersold Florist</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">7 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN6Yk7ItWkqm3b6LSE-6OBR_ihirRKVJxqKjt3N=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 20, 2026</div>
-            <div class="card-text truncated">MARCH BIRTH FLOWER FUN FACTS! 🎂 🌼 Daffodil: All about Joy & Prosperity — legend says you should always give them in a bunch! 🌸 Cherry Blossom: Spring & New Beginnings — these iconic blooms only last about two weeks, making them the 'limited edition' of nature.</div>
-            <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('truncated');this.textContent=this.textContent==='Read more ▾'?'Read less ▴':'Read more ▾'">Read more ▾</button>
+</section>
+<section class="client-section" id="bedford-village">
+    <div class="section-header">
+        <div>
+            <h2>Bedford Village <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">2 posts (90 days) Â· 2 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEOjFvfuR-szYqAE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPMEFrDlJeFmlck9KKgAhyXUMJAXRVAwXSexTQO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 18, 2026</div>
-            <div class="card-text">A NEW CHAPTER BEGINS! 🍼 Celebrate new beginnings with a baby by sending a hand-crafted bouquet that brings warmth to their new world.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKENPEhPPUgYzDbg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPVf8XZ7ZG3gMcuIlzMqxa8iNYxjtPxrSjeNozD=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">As the winter frost finally fades and the days grow longer here in Bedford, there is a distinct shift in the air. Spring...</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://bedfordvillageflowershoppe.com/2026/02/spring-splendor-gifting-flowers-for-the-spring-season-2/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEO3V5rixsdGYfw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNC8SRupijM9uj1DCZ31YQDeEhG2XzARoTQb7xh=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 16, 2026</div>
-            <div class="card-text">When you shop with a local florist like us, you're helping shape your community all while spreading some joy ♥️ #supportlocalbusiness #shoplocal #spreadjoy</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEIGKrdu2-byZfg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipNPwQw2QzH3e_mubK1RTqsr_-bzGzxC0iPC135f=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">In the fast-paced business world of Westchester County, first impressions are often made before a single word is spoken.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://bedfordvillageflowershoppe.com/2026/03/corporate-floral-arrangements-enhancing-your-business-space-2/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEOSaw-PU8NXw3gE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN7napmHAeabx7Etp5J35LBvGx101PFCjaBP0S9=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 11, 2026</div>
-            <div class="card-text">STOP THE SCROLL! 🧡 Your simple like or follow is the heartbeat of our local floral business. Help us keep blooming and sharing our passion with the community — every click truly counts!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEPGD4vDmoOLUWw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipMnMQTnW6jjGUEkF2xdKLUPvZ0yLHScDN7L_BjG=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Bring warmth and beauty to your Thanksgiving celebration with our handcrafted holiday flower arrangements.</p>
+        <p class="card-date">2025-11-14</p>
+        <div class="card-footer"><a href="https://bedfordvillageflowershoppe.com/product-category/floral-arrangements/thanksgiving-arrangements/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKEOmx1YWAuMaTJA" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPEy5oE6XLN_pq6Fh9A38j7QMsRqByTgvG7y6a3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 09, 2026</div>
-            <div class="card-text">REFRESH YOUR SPACE! There's nothing like professional floral design to bring a touch of luxury to your home decor. Transform your sanctuary with the beauty of expert-level artistry today! 🧡</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEN30oPbXyNO8XA" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMpy7gLVcdc-_yWuqURDmjYslnY_1eovH2kCtwv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 04, 2026</div>
-            <div class="card-text">CELEBRATION VIBES! Flowers are the ultimate way to level up any birthday, anniversary, or gathering. 💐 Let the petals set the mood and bring the energy to your next big moment! 🧡</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEMf-qMaGwPbfyQE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMzNadInlm1bo3tV-RwJn5EOEyNakwOLIWGkCN-=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Mar 02, 2026</div>
-            <div class="card-text">MAKE IT ICONIC! ✨ From intimate dinners to massive milestones, flowers bring the 'main character' energy every party needs. 🎂 Transform your space and celebrate in style!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEMCo_MzskpTVPA" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipODut_8mML0gatFxBQbTPRhoMQLljy2CqjC-PAO=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Aebersold Florist</div>
-            <div class="card-date">📅 Feb 23, 2026</div>
-            <div class="card-text">Having a local florist hand-design your sympathy flowers is a true show of love. 🕊️ Every detail and petal is felt deeply and will reflect your sentiment perfectly.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEJT-tcnC867r-gE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipMN_JHWUonTIyvfzOdXpVI9XE6X1l6QgBA6A06N=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">At Bedford Village Flower Shoppe, we understand the delicate nature of sympathy arrangements.</p>
+        <p class="card-date">2025-10-08</p>
+        <div class="card-footer"><a href="https://bedfordvillageflowershoppe.com/2025/09/sympathy-flowers-expressing-condolences-with-elegance-2/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=5453874622487325433&use=posts&lpsid=CIHM0ogKENO62_K6oKL11gE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="monroe-florist-flower-delivery" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Monroe Florist & Flower Delivery</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">2 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipO...=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Mar 18, 2026</div>
-            <div class="card-text">Shop online at Monroe Florist for beautiful hand-crafted flower arrangements with same-day local delivery to Monroe, MI.</div>
-            
+</section>
+<section class="client-section" id="nancys-floral">
+    <div class="section-header">
+        <div>
+            <h2>Nancy's Floral <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">2 posts (90 days) Â· 2 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEMjG3OnQv9jO2wE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Custom bouquets, elegant gift baskets, and same-day floral delivery — each arrangement designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEM3Y-a_97u-lEg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipP6UkPChvIBAPbTG93O93d4L7zxYY1fmTF6jUmW=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">There is a unique power in the unexpected. 'Just Because' flowers are the most sincere form of communication.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://www.nancysfloral.com/blog/why-fresh-flowers-make-the ultimate-just-because-gift/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEL6Py4b-3sDKGw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Elevating the Everyday: Floral Arrangements that Transform Your Mood — a guide from Monroe Florist.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEKa0jqr72urwCg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipNVAHaoJJ0pO6-blUjaJHXaMgsvFmRBRDiT3L1V=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Spring in the Pacific Northwest is more than just a change in the weather; it's a sensory awakening.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://www.nancysfloral.com/blog/top-seasonal-flowers-for-springtime-gifting/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEMzDjbz17rOwHQ" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Monroe Florist & Flower Delivery</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">We specialize in custom bouquets, elegant gift baskets, and same-day floral delivery. Each arrangement is designed and hand-delivered with care to homes and businesses across Monroe, MI.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.monroeflorist.biz/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4170389184517170520&use=posts&lpsid=CIHM0ogKEJi44YLku7yAWg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPl-LH4db7BBdvDUsU7mmvtP4HHCZIpVwmf50Ps=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Fall Colors for Your Holiday Table â Celebrate Thanksgiving with seasonal blooms in deep oranges, golds, and reds.</p>
+        <p class="card-date">2025-11-14</p>
+        <div class="card-footer"><a href="https://www.nancysfloral.com/shop-by-occasion/thanksgiving/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=17411674761653498727&use=posts&lpsid=CIHM0ogKEPay_Y6Rz8fl-AE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="accel-conceptions-inc" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Accel Conceptions, Inc.</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">2 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOa-FIk7N30psQDSmNeiPHuAgMSC9DovuCsYPNL=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Surrogacy is life-changing but raises ethical questions. Learn how Accel Conceptions protects the rights of children, surrogates, and intended parents through fair, transparent, and responsible practices.</div>
-            
+</section>
+<section class="client-section" id="radebaugh">
+    <div class="section-header">
+        <div>
+            <h2>Radebaugh <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">6 posts (90 days) Â· 5 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.accelconceptions.com/is-surrogacy-ethical-debating-the-moral-questions/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEI7x7cfToaKnVw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPguDgSOcS6vSkV0_PSCmQxx0sW9aSUx5bGZopN=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Disqualifications for surrogacy — are you eligible? Learn what criteria may affect your ability to become a surrogate or work with a surrogate agency.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <div class="card-footer-links"><a href="https://www.accelconceptions.com/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEMLTs_XjsfD1Zw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipON5QIhHStxar0zugBGW53aA2qVl2HWwj9KhbAY=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Order TODAY for local Easter delivery and we will include a FREE sleeve of Wockenfuss filled Easter Eggs</p>
+        <p class="card-date">2026-04-02</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEMXem5zbqLnTaQ" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMte4ReKZ2dzvLhXJDhSnxsKYxJ-fcopCZHXtYa=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Jan 28, 2026</div>
-            <div class="card-text">How to find a surrogate gestational carrier — a comprehensive guide from Accel Conceptions.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.accelconceptions.com/how-to-find-a-surrogate-gestational-carrier/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKENbIxreQpNKw3gE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPn8yixdVbydfRjBlkXzVEucrEABt5ua8nYBwBe=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Flowers That Make a Strong First Impression â intentionality is key to choosing flowers that command respect.</p>
+        <p class="card-date">2026-03-27</p>
+        <div class="card-footer"><a href="https://www.radebaugh.com/blog/flowers-that-make-a-strong-first-impression/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEMvSvpn2x8zxSw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOdNWPTFR8MOZz6x0P99oBNaJAEKMB8irp9SmC3=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Accel Conceptions, Inc.</div>
-            <div class="card-date">📅 Jan 28, 2026</div>
-            <div class="card-text">Coping strategies during the surrogacy process — tips for staying emotionally and mentally healthy throughout your journey.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.accelconceptions.com/coping-strategies-during-the-surrogacy-process/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=13284498715474189317&use=posts&lpsid=CIHM0ogKEJDh-OL2mfKiKg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipOKUUr6tyefCUoKXHQDrjwr9_EmptkWYYuYLoh8=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Best Flowers to Send to Someone Recovering at Home â a guide to the most thoughtful, healing stems.</p>
+        <p class="card-date">2026-03-27</p>
+        <div class="card-footer"><a href="https://www.radebaugh.com/blog/best-flowers-to-send-to-someone-recovering-at-home/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEI7Z2p2n7KvZeg" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipOJ8NCk3pnciwLsF1d_i0TFXRpxHzMSAZ6kVjFR=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Our Easter Collection is here! Shop spring floral arrangements with all the season's best, tulips, hyacinth, daffodils a...</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://www.radebaugh.com/cat-easter/flowers-bouquets-plants-gifts/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEIHi0sXwteKdVA" target="_blank" class="btn btn-google">View on Google â</a></div>
+    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipMZaZGXXu4zQudLqqHujLD7xdHzXVjRkdTQNFBl=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Easter Centerpiece Design Class on Thursday, April 2nd at 6 PM â hands-on class to design a fresh seasonal centerpiece.</p>
+        <p class="card-date">2026-03-26</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEK7Fu66Nr-LB2gE" target="_blank" class="btn btn-google">View on Google â</a></div>
+    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipMyWpP3qbJHBxufTDBQTqYQ7KDJjV4R4CPmziGM=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Spring Florals Design Class on Thursday, March 19th at 6 PM â hands-on evening creating a fresh seasonal arrangement.</p>
+        <p class="card-date">2026-03-12</p>
+        <div class="card-footer"><a href="https://www.radebaugh.com/events/spring-florals-design-class-3/19-6pm/" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEO723rTl15uSCw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="rockcastle-florist" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Rockcastle Florist</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">2 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipOmq23aHrY-eJwSWsKzuHHZZSZHHpCZ4-QfOmvv=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Rockcastle Florist</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text truncated">For decades, greenery was often treated as an afterthought in the floral world — the 'filler' tucked behind a rose or a lily. But in 2026, the real secret to a high-end, designer look isn't just the blooms you choose; it's the structural foliage that supports them.</div>
-            <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('truncated');this.textContent=this.textContent==='Read more ▾'?'Read less ▴':'Read more ▾'">Read more ▾</button>
+</section>
+<section class="client-section" id="hodys">
+    <div class="section-header">
+        <div>
+            <h2>Hody's <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">3 posts (90 days) Â· 1 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEOGB2IK08oeL3gE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipO8NCETi3BRGwfhaM642-pUEtXXMmpMsnI7bb6L=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Rockcastle Florist</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text truncated">At Rockcastle Florist, we've spent decades helping the Rochester business community celebrate everything from promotions to retirements. In 2026, the trend for office gifting has shifted toward 'Low-Profile Luxury' — designs that make a statement without taking over a desk.</div>
-            <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('truncated');this.textContent=this.textContent==='Read more ▾'?'Read less ▴':'Read more ▾'">Read more ▾</button>
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">ORDER</span></div>
-            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEIzn9vyYx5vpVg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    
+    <div class="card-body">
+        <p class="card-summary">Deliveries throughout our service area Monday through Saturday. Walk In service Monday through Friday only.</p>
+        <p class="card-date">2026-04-11</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEPegxqC9jprJSQ" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMnYHhmlgA01zJSE9WNFXyLflb76Mk2oWT7pewJ=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Rockcastle Florist</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Spring Awakening: Florals that capture the joy and color of the season's return.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEOOwqfXI687kWg" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    
+    <div class="card-body">
+        <p class="card-summary">We Deliver to Brentwood and Franklin every Saturday too!</p>
+        <p class="card-date">2026-03-07</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEKi-w9i0ld_bDw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNIEZ0_cahNgH4airInPOIqmkW8dVQ0d6KI7BQf=w600" alt="Post image" loading="lazy" onerror="this.style.display='none'">
-        <div class="card-body">
-            <div class="card-business">Rockcastle Florist</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Local Same Day & Express Delivery In Rochester & Canandaigua | Nationwide Same Day Delivery Anywhere In The USA</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.rockcastleflorist.com/" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=5037247426256700576&use=posts&lpsid=CIHM0ogKEMr7ydWB-rfdgAE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    
+    <div class="card-body">
+        <p class="card-summary">Until Monday 2/2/26 only our Nashville store will be open for walk-in traffic as we adjust to changing weather condition...</p>
+        <p class="card-date">2026-01-30</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEIOY1uv58vinxQE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="dave-fox-design-build-remodelers" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Dave Fox Design Build Remodelers</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">2 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">How to prioritize your remodel when tackling multiple spaces — expert advice from Dave Fox Design Build Remodelers.</div>
-            
+</section>
+<section class="client-section" id="pflorist">
+    <div class="section-header">
+        <div>
+            <h2>Pflorist <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">2 posts (90 days) Â· 2 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.davefox.com/projects/how-to-prioritize-your-remodel-when-tackling-multiple-spaces" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEN_Ki4SWkbzWcA" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Mar 17, 2026</div>
-            <div class="card-text">Using color psychology to guide your home remodel choices — discover how the right colors can transform your living spaces.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.davefox.com/ideas/using-color-psychology-to-guide-your-home-remodel-choices" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEObM_oiCsvmbIw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipNtuwIbXVuuBRXULwTz0ofXXPsvoC2v6_nG1uth=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">A 'thank you' can be whispered, written, or spoken, but when it is sent in the form of flowers, it becomes an experience...</p>
+        <p class="card-date">2026-03-27</p>
+        <div class="card-footer"><a href="https://www.pflorist.com/blog/03-03-2026/Thank-You-Flowers-That-Show-True-Appreciation" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEPrWpPvSh62TXg" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Creating a cohesive look across multiple rooms in a remodel — tips and design principles from Dave Fox.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.davefox.com/resource-center/creating-a-cohesive-look-across-multiple-rooms-in-a-remodel" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKEIXr9v-H4_zTpwE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPhuADFX4ZfmIPMMc4O_cBSx6JQOYeqScClkLbf=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Spring in Pennsylvania is a complete sensory reset â Spring 2026 is all about high-texture, garden-style arrangements.</p>
+        <p class="card-date">2026-03-27</p>
+        <div class="card-footer"><a href="https://www.pflorist.com/blog/03-10-2026/Seasonal-Blooms-to-Order-This-Spring" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEPSxhfzptNrdgwE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Dave Fox Design Build Remodelers</div>
-            <div class="card-date">📅 Jan 31, 2026</div>
-            <div class="card-text">Standing desks and ergonomics in home office remodels — how to design a workspace that supports productivity and wellbeing.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span><span class="cta-badge">LEARN_MORE</span></div>
-            <div class="card-footer-links"><a href="https://www.davefox.com/resource-center/standing-desks-and-ergonomics-in-home-office-remodels" target="_blank" class="view-link">View ↗</a><a href="https://local.google.com/place?id=4560429990464754921&use=posts&lpsid=CIHM0ogKENDsss-J_bCljgE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPM0EvrVaO3CPomLKmCk3F8FOZxdqRv7lodr_bB=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Celebrate love and friendship this Valentine's Day at Penny's by Plaza Flowers! Family owned and operated since 1937.</p>
+        <p class="card-date">2025-01-20</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=7178189195887540530&use=posts&lpsid=CIHM0ogKEICAgID_sKqMMw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="radebaugh-florist-and-greenhouses" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Radebaugh Florist and Greenhouses</span>
-            <span class="status-badge status-green">On Track</span>
-            <span class="client-post-count">4 posts in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">Spring Florals Design Class — Join us Thursday, March 19th at 6 PM for a hands-on evening creating a fresh seasonal arrangement. Our floral designers will guide you step-by-step.</div>
-            
+</section>
+<section class="client-section" id="aebersold-florist">
+    <div class="section-header">
+        <div>
+            <h2>Aebersold Florist <span class="pill pill-green">On Track</span></h2>
+            <p class="post-stats">6 posts (90 days) Â· 6 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEO723rTl15uSCw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">Sip & Plant: Spring Bulb Planter Workshop — Join us Thursday, March 19th at 6 PM in our greenhouse for a relaxing evening creating your own spring bulb planter.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-EVENT">EVENT</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEPPkoOfK6-na9QE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipM-VaEamVGICqaNsKXqlbaragT5g6COM_4H8yHZ=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">SAY IT WITH SPRING! There's no better way to brighten someone's day than with a fresh, hand-crafted bouquet of seasonal ...</p>
+        <p class="card-date">2026-04-06</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEKybzfP8gNfnlQE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 12, 2026</div>
-            <div class="card-text">PRIMROSE SALE — March 1st–31st, enjoy 20% off all 4.5" primrose pots. These vibrant, early-blooming favorites are perfect for adding a pop of color to your porch, windowsill, or seasonal décor.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEJrK0NWx0ZWwkQE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipN-qi8C7_kFPHw8svwNxZaBknJO6LTYhugcMYD9=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">EASTER IS AROUND THE CORNER! Whether it's a family brunch or a sweet surprise for a loved one, flowers are the perfect w...</p>
+        <p class="card-date">2026-04-03</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEOr4l8Lt8YaiBQ" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Mar 02, 2026</div>
-            <div class="card-text">🍀 St. Patrick's Day Plants – Baltimore & Towson, MD. Celebrate with fresh shamrocks, blooming daffodils, and colorful primrose planters! Perfect for gifts, home décor, or office celebrations.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEPXngNDxs4_BLA" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipNIAxGk0hdulxuFkEDOm-Cb4lfEap6fLCxcgbeA=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Elevate any occasion with a hand-crafted bouquet from your neighborhood florist that shows how much you care.</p>
+        <p class="card-date">2026-03-27</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEIvKi6DnwMmwKw" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 24, 2026</div>
-            <div class="card-text">🍀 St. Patrick's Day Flowers in Baltimore, MD — limited-edition collection: Lucky Charm, Irish Meadow, and Over the Rainbow. Luxury green and white floral arrangements with lush hydrangea, orchids, and Bells of Ireland.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEL7LgOy8pr--ugE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPJU3FyioxuPO5SEw6XJDnAW2JSNS1_2T0YjtWr=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">THE ULTIMATE GIFT! From anniversaries to 'just because,' a local floral delivery is the perfect way to celebrate.</p>
+        <p class="card-date">2026-03-25</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEL-59pTkuYmFpQE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 12, 2026</div>
-            <div class="card-text">How to Order Fast for Valentine's Day — Browse roses, arrangements, wine crates, stuffed animals, chocolates, and balloons. Add a personalized note. That's it.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKEMvh1vXb2MjYQQ" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipN6Yk7ItWkqm3b6LSE-6OBR_ihirRKVJxqKjt3N=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">MARCH BIRTH FLOWER FUN FACTS! Daffodil: All about Joy & Prosperity. Cherry Blossom: All about Spring & New Beginnings.</p>
+        <p class="card-date">2026-03-20</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKEOjFvfuR-szYqAE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Radebaugh Florist and Greenhouses</div>
-            <div class="card-date">📅 Feb 10, 2026</div>
-            <div class="card-text">TODAY ONLY: 🍫 FREE Wockenfuss CHOCOLATES with your order. Choose from red rose arrangements, fresh florals, chocolates, balloons, plush, wine & bubbly. Final chance before Valentine's Day!</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-OFFER">OFFER</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=18266237501763358288&use=posts&lpsid=CIHM0ogKELKOiIz92OXtrgE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
-    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipPMEFrDlJeFmlck9KKgAhyXUMJAXRVAwXSexTQO=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">A NEW CHAPTER BEGINS! Celebrate new beginnings with a baby by sending a hand-crafted bouquet that brings warmth to their...</p>
+        <p class="card-date">2026-03-18</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=8873844384929036811&use=posts&lpsid=CIHM0ogKENPEhPPUgYzDbg" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
-
-<div id="hodys-florist" class="client-section">
-    <div class="client-section-header">
-        <div class="client-header-left">
-            <span class="client-name">Hodys Florist</span>
-            <span class="status-badge status-yellow">Behind</span>
-            <span class="client-post-count">1 post in March 2026</span>
-        </div>
-        <a href="#top" class="back-to-top">↑ Back to top</a>
     </div>
-    <div class="card-grid">
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Hodys Florist</div>
-            <div class="card-date">📅 Mar 07, 2026</div>
-            <div class="card-text">We Deliver to Brentwood and Franklin every Saturday too! Hodys Florist — your local Nashville florist for all occasions.</div>
-            
+</section>
+<section class="client-section" id="polites">
+    <div class="section-header">
+        <div>
+            <h2>Polites <span class="pill pill-yellow">Behind</span></h2>
+            <p class="post-stats">0 posts (90 days) Â· 0 posts (30 days)</p>
         </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEKi-w9i0ld_bDw" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+        <a href="#top" class="back-link">â Back to top</a>
     </div>
-        <div class="card">
-        <div class="card-img-placeholder">🌸</div>
-        <div class="card-body">
-            <div class="card-business">Hodys Florist</div>
-            <div class="card-date">📅 Jan 30, 2026</div>
-            <div class="card-text">Until Monday 2/2/26 only our Nashville store will be open for walk-in traffic as we adjust to changing weather conditions. Please call to confirm hours.</div>
-            
-        </div>
-        <div class="card-footer">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="topic-badge topic-STANDARD">STANDARD</span></div>
-            
-        
-            <div class="card-footer-links"><a href="https://local.google.com/place?id=6718936386242256994&use=posts&lpsid=CIHM0ogKEIOY1uv58vinxQE" target="_blank" class="view-link gmaps-link">View on Google ↗</a></div></div>
+    <div class="post-grid">
+        <div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipN3cvcP-tWSydkiJ7ED07zmTpOK18n7Szrrl1lk=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Get ready for St. Patrick's Day with one dozen green carnations with green hypericum and bluperum arranged in a clear gl...</p>
+        <p class="card-date">2025-03-13</p>
+        <div class="card-footer"><a href="https://www.politesflorist.com/cgi-bin/politesitem-dba.cgi/TopOfTheMorning#body" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgMDQ_e7G3gE" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
+</div><div class="post-card">
+    
+    <div class="card-body">
+        <p class="card-summary">Fall is in Full Bloom! Bring the warmth and beauty of the season into your home with our stunning fall flower arrangemen...</p>
+        <p class="card-date">2024-10-03</p>
+        <div class="card-footer"><a href="https://www.politesflorist.com/Fall" target="_blank" class="btn btn-cta">View â</a><a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgIDn9J_3Kw" target="_blank" class="btn btn-google">View on Google â</a></div>
+    </div>
+</div><div class="post-card">
+    <div class="card-img"><img src="https://lh3.googleusercontent.com/p/AF1QipNP7SwAsW6nT1HG5j12LwLOQ94nYu00dghsb8f1=s400" alt="Post image" onerror="this.parentElement.style.display='none'"></div>
+    <div class="card-body">
+        <p class="card-summary">Last Chance to Celebrate Rose Month with $20 Off a Dozen Roses any Color!</p>
+        <p class="card-date">2023-06-26</p>
+        <div class="card-footer"><a href="https://local.google.com/place?id=17177770621596716249&use=posts&lpsid=CIHM0ogKEICAgICJlo_jWA" target="_blank" class="btn btn-google">View on Google â</a></div>
     </div>
 </div>
+    </div>
+</section>
+<section class="client-section" id="blooms-in-bunches">
+    <div class="section-header">
+        <div><h2>Blooms in Bunches <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="dotties-flowers">
+    <div class="section-header">
+        <div><h2>Dotties Flowers <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="4-seasons">
+    <div class="section-header">
+        <div><h2>4 Seasons <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="dave-fox">
+    <div class="section-header">
+        <div><h2>Dave Fox <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="longmont-florist">
+    <div class="section-header">
+        <div><h2>Longmont Florist <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="pozitivf">
+    <div class="section-header">
+        <div><h2>Pozitivf <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="the-creative-kitchen-tck">
+    <div class="section-header">
+        <div><h2>The Creative Kitchen TCK <span class="pill pill-error">Auth Error</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Business Profile connection needs to be re-authorized in Adzviser.</p>
+</section>
+<section class="client-section" id="monroe-florist">
+    <div class="section-header">
+        <div><h2>Monroe Florist <span class="pill pill-error">Data Unavailable</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Data could not be retrieved (dataset too large or connection timeout).</p>
+</section>
+<section class="client-section" id="anaheim-hills">
+    <div class="section-header">
+        <div><h2>Anaheim Hills <span class="pill pill-error">Data Unavailable</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Data could not be retrieved (dataset too large or connection timeout).</p>
+</section>
+<section class="client-section" id="rockcastle">
+    <div class="section-header">
+        <div><h2>Rockcastle <span class="pill pill-error">Data Unavailable</span></h2></div>
+        <a href="#top" class="back-link">â Back to top</a>
+    </div>
+    <p class="error-note">â ï¸ Data could not be retrieved (dataset too large or connection timeout).</p>
+</section>
 
-<div class="no-posts-section">
-    <div class="no-posts-header">❌ No Posts in Last 90 Days</div>
-    <ul class="no-posts-list">
-        <li>Polites Florist</li>
-        <li>Bedford Village Flower Shoppe</li>
-        <li>Blooms in Bunches</li>
-        <li>Dottie's Flowers & Plants</li>
-        <li>Four Seasons Flowers</li>
-        <li>Longmont Florist</li>
-        <li>Pozitivf Fertility</li>
-        <li>The Creative Kitchen Co</li>
-        <li>Penny's by Plaza Flowers</li>
-        <li>Nancy's Floral, Inc.</li>
-    </ul>
+
+  <footer style="text-align:center;color:#999;font-size:.8rem;padding:24px 0;">
+    Generated automatically Â· Two Wheels Marketing Â· April 14, 2026
+  </footer>
 </div>
-
-<div class="updated-at">Report generated March 23, 2026 · Data from Adzviser (Google Business Profile)</div>
 </body>
 </html>
